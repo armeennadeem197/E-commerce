@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Star, Truck } from "lucide-react";
 import AddToBag from "@/app/components/AddToBag";
-import CheckoutNow from "@/app/components/CheckoutNow";
 
 async function getProductBySlug(slug: string) {
   try {
@@ -24,7 +23,7 @@ async function getProductBySlug(slug: string) {
 type ProductPageProps = {
   params: { slug: string };
 };
-
+export const dynamic = "force-dynamic";
 export default function ProductPage({ params }: ProductPageProps) {
   const [data, setData] = useState<fullProduct | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -48,7 +47,7 @@ export default function ProductPage({ params }: ProductPageProps) {
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <div className="spinner"></div> {/* Consider adding a better spinner */}
+        <div className="spinner"></div> {/* Replace with a better loader */}
         <span>Loading...</span>
       </div>
     );
@@ -97,12 +96,14 @@ export default function ProductPage({ params }: ProductPageProps) {
                 <span className="text-xl font-bold text-gray-800 md:text-2xl">
                   ${data?.price || "Price not available"}
                 </span>
-                <span className="mb-0.5 text-red-500 line-through">
-                  ${data ? data.price + 30 : "N/A"}
-                </span>
+                {data?.price && (
+                  <span className="mb-0.5 text-red-500 line-through">
+                    ${data.price + 30}
+                  </span>
+                )}
               </div>
               <span className="text-sm text-gray-500">
-                Incl. Vat plus shipping
+                Incl. VAT plus shipping
               </span>
             </div>
 
@@ -111,6 +112,7 @@ export default function ProductPage({ params }: ProductPageProps) {
               <Truck className="w-6 h-6" />
               <span className="text-sm">2-4 Day Shipping</span>
             </div>
+
             <div className="flex gap-2.5 mb-0.5 mt-8">
               <AddToBag
                 currency="USD"
@@ -121,16 +123,8 @@ export default function ProductPage({ params }: ProductPageProps) {
                 key={data?._id}
                 price_id={data?.price_id || ""}
               />
-              <CheckoutNow
-                currency="USD"
-                description={data?.description || "No description available"}
-                image={data?.images[0]?.asset.url || ""}
-                name={data?.name || "No name available"}
-                price={data?.price ?? 0}
-                key={data?._id}
-                price_id={data?.price_id || ""}
-              />
             </div>
+
             {/* Description */}
             <p className="mt-12 text-base text-gray-500 tracking-wide">
               {data?.description || "Description not available"}
@@ -141,3 +135,4 @@ export default function ProductPage({ params }: ProductPageProps) {
     </div>
   );
 }
+

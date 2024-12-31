@@ -43,11 +43,11 @@ const Footer = () => {
   ];
 
   const socialLogos = [
-    { src: "/42.jpg", alt: "Logo 1" },
-    { src: "/43.jpg", alt: "Logo 2" },
-    { src: "/44.jpg", alt: "Logo 3" },
-    { src: "/45.png", alt: "Logo 4" },
-    { src: "/46.png", alt: "Logo 5" },
+    { src: "/42.jpg", alt: "Logo 1" , width: 35, height: 16},
+    { src: "/43.jpg", alt: "Logo 2" , width: 35, height: 16},
+    { src: "/44.jpg", alt: "Logo 3" , width: 35, height: 16},
+    { src: "/45.png", alt: "Logo 4" , width: 35, height: 16},
+    { src: "/46.png", alt: "Logo 5" , width: 35, height: 16},
   ];
 
   return (

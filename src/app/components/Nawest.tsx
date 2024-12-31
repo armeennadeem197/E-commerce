@@ -5,7 +5,7 @@ import { client } from "@/sanity/lib/client";
 import { fullProduct } from "../interface";
 
 async function getData() {
-  const query = `*[_type == "product"][0...9] | order(_createdAt desc) {
+  const query = `*[_type == "product"][0...10] | order(_createdAt desc) {
         _id,
           price,
         name,
