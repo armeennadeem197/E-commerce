@@ -9,7 +9,7 @@ export interface ProductCart {
   price: number;
   currency: string;
   image: any;
-  price_id:string;
+  price_id: string;
 }
 
 export default function AddToBag({
@@ -21,16 +21,27 @@ export default function AddToBag({
   price_id,
 }: ProductCart) {
   const { addItem, handleCartClick } = useShoppingCart();
+
+  // Ensure image is valid and passed correctly
+  const imageUrl = image?.asset ? urlFor(image).url() : "";
+
   const product = {
     name: name,
     description: description,
     price: price,
     currency: currency,
-    image:urlFor(image).url(),
-    price_id:price_id
-  }
-  return <Button onClick={() => {
-    addItem(product);
-    handleCartClick();
-  }}>Add To Cart</Button>;
+    image: imageUrl,  // Use the correct image URL here
+    price_id: price_id,
+  };
+
+  return (
+    <Button
+      onClick={() => {
+        addItem(product);
+        handleCartClick();
+      }}
+    >
+      Add To Cart
+    </Button>
+  );
 }

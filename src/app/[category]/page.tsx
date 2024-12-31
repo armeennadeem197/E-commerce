@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 async function getData(category: string) {
-  const query = `*[_type == "product" && category->name == $category] {
+  const query = `*[_type == "product" && category->name == $category][0...4] | order(_createdAt desc) {
     _id,
     price,
     name,
