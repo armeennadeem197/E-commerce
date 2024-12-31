@@ -1,64 +1,36 @@
 "use client";
-import ImageGallery from "@/app/components/ImageGallery";
-import { fullProduct } from "@/app/interface";
 import { useEffect, useState } from "react";
+import { useParams } from "next/navigation"; // Use useParams for App Router
+import ImageGallery from "@/app/components/ImageGallery";
 import { Button } from "@/components/ui/button";
 import { Star, Truck } from "lucide-react";
 import AddToBag from "@/app/components/AddToBag";
 
 async function getProductBySlug(slug: string) {
-  try {
-    const res = await fetch(
-      `https://jfp89o36.api.sanity.io/v2024-12-28/data/query/production?query=*%5B_type+%3D%3D+%22product%22+%26%26+slug.current+%3D%3D+%22${slug}%22%5D+%7B%0A++_id%2C%0A++name%2C%0A++description%2C%0A++price%2C%0A++%22categoryName%22%3A+category-%3Ename%2C%0A++slug+%7B%0A++++current%0A++%7D%2C%0A++images%5B%5D+%7B%0A++++asset-%3E%7B%0A++++++_id%2C%0A++++++url%0A++++%7D%0A++%7D%0A%7D%0A%0A`
-    );
-    if (!res.ok) throw new Error("Failed to fetch product data");
-    const data = await res.json();
-    return data.result[0];
-  } catch (error) {
-    console.error("Error fetching product data:", error);
-    return null;
-  }
+  const res = await fetch(
+    `https://jfp89o36.api.sanity.io/v2024-12-28/data/query/production?query=*%5B_type+%3D%3D+%22product%22+%26%26+slug.current+%3D%3D+%22${slug}%22%5D+%7B%0A++_id%2C%0A++name%2C%0A++description%2C%0A++price%2C%0A++%22categoryName%22%3A+category-%3Ename%2C%0A++slug+%7B%0A++++current%0A++%7D%2C%0A++images%5B%5D+%7B%0A++++asset-%3E%7B%0A++++++_id%2C%0A++++++url%0A++++%7D%0A++%7D%0A%7D%0A%0A`
+  );
+  return res.json();
 }
 
-type ProductPageProps = {
-  params: { slug: string };
-};
-export const dynamic = "force-dynamic";
-export default function ProductPage({ params }: ProductPageProps) {
-  const [data, setData] = useState<fullProduct | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+export default function ProductPage() {
+  const { slug } = useParams(); // Use useParams to get the slug from the URL
+
+  const [data, setData] = useState<any>(null);
 
   useEffect(() => {
-    if (params.slug) {
-      setLoading(true);
-      setError(null);
-      getProductBySlug(params.slug).then((product) => {
-        if (product) {
-          setData(product);
-        } else {
-          setError("Product not found");
-        }
-        setLoading(false);
-      });
+    if (slug) {
+      const fetchProductData = async () => {
+        const result = await getProductBySlug(slug as string);
+        setData(result.result[0]); // Assuming the data is in the result array
+      };
+
+      fetchProductData();
     }
-  }, [params.slug]);
+  }, [slug]);
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="spinner"></div> {/* Replace with a better loader */}
-        <span>Loading...</span>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <span className="text-red-500">{error}</span>
-      </div>
-    );
+  if (!data) {
+    return <div>Loading...</div>; // Show loading state while data is fetched
   }
 
   return (
@@ -67,7 +39,7 @@ export default function ProductPage({ params }: ProductPageProps) {
         <div className="grid gap-8 md:grid-cols-2">
           {/* Image Gallery */}
           <div className="flex justify-center">
-            <ImageGallery images={data?.images || []} />
+            <ImageGallery images={data.images || []} />
           </div>
           <div className="md:py-8">
             <div className="mb-2 md:mb-3">
@@ -135,4 +107,3 @@ export default function ProductPage({ params }: ProductPageProps) {
     </div>
   );
 }
-
