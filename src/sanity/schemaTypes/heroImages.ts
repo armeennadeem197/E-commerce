@@ -1,17 +1,19 @@
-export default {
+const heroImageSchema = {
     name: 'heroImage',
     type: 'document',
-    title:'Two Hero Images',
-    fields:[
+    title: 'Two Hero Images',
+    fields: [
         {
-            name:'image1',
+            name: 'image1',
             type: 'image',
-            title:'first Image',
+            title: 'First Image',
         },
         {
-            name:'image2',
+            name: 'image2',
             type: 'image',
-            title:'Second Image',
+            title: 'Second Image',
         }
     ]
-}
+};
+
+export default heroImageSchema;
